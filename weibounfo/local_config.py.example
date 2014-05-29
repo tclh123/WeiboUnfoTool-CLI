@@ -1,0 +1,17 @@
+# coding: utf-8
+
+# APP_KEY = ''            # app key
+# APP_SECRET = ''         # app secret
+# CALLBACK_URL = ''       # callback url
+
+# configure SQLAlchemy
+# DATABASE_URI = "mysql://{user}:{passwd}@{host}/{db}"
+# db_params = {
+#     'user': 'vagrant',
+#     'passwd': '',
+#     'host': 'localhost',
+#     'db': 'widodb'
+# }
+# SQLALCHEMY_DATABASE_URI = DATABASE_URI.format(**db_params)
+
+APP_PORT = 8888
