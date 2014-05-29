@@ -1,7 +1,7 @@
 # coding: utf-8
 
 import os
-from weibounfo.lib.snspy import APIClient
+from weibounfo.lib.snspy import APIClient, APIError
 from weibounfo.lib.snspy import SinaWeiboMixin
 
 from weibounfo.config import APP_KEY, APP_SECRET, CALLBACK_URL
