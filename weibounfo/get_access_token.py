@@ -1,12 +1,15 @@
 #!/usr/bin/env python
 # coding: utf-8
 
+import os
 import webbrowser
 
 from lib.snspy import APIClient
 from lib.snspy import SinaWeiboMixin
 
 from config import APP_KEY, APP_SECRET, CALLBACK_URL
+
+here = os.path.abspath(os.path.dirname(__file__))
 
 
 if __name__ == '__main__':
@@ -25,12 +28,10 @@ if __name__ == '__main__':
 
     print "access_token: %s\nexpires: %s" % (access_token, expires)
 
-    with open('access_token.bak', 'w') as f:
+    with open(os.path.join(here, 'access_token.bak'), 'w') as f:
         f.write("%s\n" % access_token)
         f.write("%s\n" % expires)
 
+    # e.g.
     # access_token: 2.007xjRoB0s5vYMc99d8b88fePfaoaD
     # expires: 1558585961
-
-    # 2.007xjRoB4FD2YC43bbb2dda6z7W7KE
-    # 1403550002
