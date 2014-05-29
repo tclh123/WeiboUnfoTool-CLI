@@ -1,0 +1,7 @@
+*.pyc
+*.swp
+
+tmp
+venv
+local_config.py
+access_token.bak
