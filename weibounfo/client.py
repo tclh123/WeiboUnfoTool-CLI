@@ -19,7 +19,7 @@ def get_access_token():
         print 'Error with get_access_token()'
         raise e
 
-access_token, expires = get_access_token()
+access_token, expires, owner_uid = get_access_token()
 
 
 def client_with_access_token(a):

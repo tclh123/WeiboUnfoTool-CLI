@@ -5,7 +5,7 @@ class Rule(object):
     def __init__(self, *args):
         self.checkers = args
 
-    def test(self, obj):
+    def check(self, obj):
         for c in self.checkers:
             if not c.check(obj):
                 return False

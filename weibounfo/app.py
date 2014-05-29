@@ -2,7 +2,7 @@
 
 from datetime import datetime
 
-from weibounfo.client import client, APIError
+from weibounfo.client import client, owner_uid, APIError
 from weibounfo.model.rule import Rule, Checker, Any, All, Not
 
 from weibounfo.model.utils import weibo_date
@@ -73,11 +73,53 @@ class JunkAccountRule(Rule):
     pass
 
 
+class LastReportSourceChecker(Checker):
+    """ 最近一条微博的微博尾巴 """
+    BANNED = [
+            u"时光机",
+            # u"皮皮时光机",
+            u"未通过审核应用"
+            ]
+    def check(self, user):
+        if 'status' not in user:
+            # print '%s dont have status' % user.screen_name
+            return True
+        if 'source' not in user.status:
+            print '%s last status deleted.' % user.screen_name
+            return True
+
+        for b in self.BANNED:
+            if b in user.status.source:
+                return True
+
+        return False
+
+
+class VerifiedChecker(Checker):
+    """ 大 V """
+    def check(self, user):
+        return user.verified
+
+
+class BigAccountChecker(Checker):
+    def check(self, user):
+        return user.followers_count > 200000 and user.statuses_count > 20000
+
+
+class MarketingAccountRule(Rule):
+    """ 营销号，大V """
+    pass
+
+
 def unfo(uid):
     r = client.friendships.destroy.post(uid=uid)
     if 'id' in r and r.id:
         return True
     return False
+
+
+IS_PRINT = True
+IS_DO_UNFO = True
 
 
 def main():
@@ -92,23 +134,30 @@ def main():
                             Not(BiFollowersHigh())
                             )
                       )
-    users = friends(uid=1659177872, limit=2000)
-    users = filter(junkAccountRule.test, users)
+    marketingAccountRule = MarketingAccountRule(
+                All(LastReportSourceChecker(),
+                    BigAccountChecker(),
+                    Not(VerifiedChecker()))
+            )
+    users = friends(uid=owner_uid, limit=3000)
+    users = filter(Any(junkAccountRule, marketingAccountRule).check, users)
 
-    for u in users:
-        print u.screen_name
+    if IS_PRINT:
+        for u in users:
+            print u.screen_name
 
-    max_retry = 5
-    for u in users:
-        r = None
-        idx = 0
-        while not r and idx < max_retry:
-            try:
-                idx += 1
-                r = unfo(u.id)
-            except APIError as e:
-                print repr(e)
-                print 'user_id: %s' % u.id
+    if IS_DO_UNFO:
+        max_retry = 5
+        for u in users:
+            r = None
+            idx = 0
+            while not r and idx < max_retry:
+                try:
+                    idx += 1
+                    r = unfo(u.id)
+                except APIError as e:
+                    print repr(e)
+                    print 'user_id: %s' % u.id
 
 
 if __name__ == '__main__':

@@ -25,12 +25,14 @@ if __name__ == '__main__':
     r = client.request_access_token(code)
     access_token = r.access_token  # access token，e.g., abc123xyz456
     expires = r.expires      # token expires time, UNIX timestamp, e.g., 1384826449.252 (10:01 am, 19 Nov 2013, UTC+8:00)
+    uid = r.uid
 
-    print "access_token: %s\nexpires: %s" % (access_token, expires)
+    print "access_token: %s\nexpires: %s\nuid: %s" % (access_token, expires, uid)
 
     with open(os.path.join(here, 'access_token.bak'), 'w') as f:
         f.write("%s\n" % access_token)
         f.write("%s\n" % expires)
+        f.write("%s\n" % uid)
 
     # e.g.
     # access_token: 2.007xjRoB0s5vYMc99d8b88fePfaoaD
