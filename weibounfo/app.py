@@ -78,7 +78,8 @@ class LastReportSourceChecker(Checker):
     BANNED = [
             u"时光机",
             # u"皮皮时光机",
-            u"未通过审核应用"
+            u"未通过审核应用",
+            u"360安全浏览器"
             ]
     def check(self, user):
         if 'status' not in user:
@@ -103,7 +104,7 @@ class VerifiedChecker(Checker):
 
 class BigAccountChecker(Checker):
     def check(self, user):
-        return user.followers_count > 200000 and user.statuses_count > 20000
+        return user.followers_count > 200000 and user.statuses_count > 10000
 
 
 class MarketingAccountRule(Rule):
@@ -141,6 +142,8 @@ def main():
             )
     users = friends(uid=owner_uid, limit=3000)
     users = filter(Any(junkAccountRule, marketingAccountRule).check, users)
+
+    # TODO: 对筛选出来的uid，再进行 show，检查 是否备注 等
 
     if IS_PRINT:
         for u in users:
